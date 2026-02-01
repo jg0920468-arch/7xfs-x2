@@ -40,6 +40,11 @@ class ConfiguracionScraper(Base):
     ultima_ejecucion = Column(DateTime)
 
 DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///prediccion.db')
+
+# Corrección para compatibilidad con SQLAlchemy 2.0 y Render (postgres:// -> postgresql://)
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 
